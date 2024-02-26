@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import Home from "./index";
 
 describe("When Form is created", () => {
@@ -21,7 +21,7 @@ describe("When Form is created", () => {
         })
       );
       await screen.findByText("En cours");
-      await screen.findByText("Message envoyé !", {}, { timeout: 3000 }); // ajout du timeout
+      await screen.findByText("Message envoyé !", {}, { timeout: 3000 });
     });
   });
 
@@ -30,15 +30,34 @@ describe("When Form is created", () => {
 
 describe("When a page is created", () => {
   it("a list of events is displayed", () => {
-    // to implement
-  })
-  it("a list a people is displayed", () => {
-    // to implement
-  })
-  it("a footer is displayed", () => {
-    // to implement
-  })
-  it("an event card, with the last event, is displayed", () => {
-    // to implement
-  })
+    render(<Home />);
+    waitFor (() => {
+      const eventListDisplayed = screen.getByTestId("events");
+      expect(eventListDisplayed).toBeInTheDocument();
+    });
+  });
 });
+
+it("a list a people is displayed", () => {
+  render(<Home />);
+  waitFor(() => {
+    const cardImageDisplayed = screen.getAllByTestId("PeopleCard-image-testid");
+    expect(cardImageDisplayed.length).toBeGreaterThan(1);
+  });
+})
+
+it("a footer is displayed", () => {
+  render(<Home />);
+  waitFor(() => {
+    const footerDisplayed = screen.getByTestId("footer");
+    expect(footerDisplayed).toBeInTheDocument();
+  });
+})
+
+it("an event card, with the last event, is displayed", () => {
+  render(<Home />);
+  waitFor(() => {
+    const cardDisplayed = screen.getByTestId("EventCard-testid");
+    expect(cardDisplayed).toBeInTheDocument();
+  });
+})
